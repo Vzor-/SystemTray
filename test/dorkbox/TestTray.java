@@ -20,11 +20,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 import dorkbox.systemTray.Checkbox;
 import dorkbox.systemTray.Menu;
 import dorkbox.systemTray.MenuItem;
 import dorkbox.systemTray.Separator;
 import dorkbox.systemTray.SystemTray;
+
+import javax.swing.*;
 
 /**
  * Icons from 'SJJB Icons', public domain/CC0 icon set
@@ -56,6 +59,12 @@ class TestTray {
 
     public
     TestTray() {
+
+        //try moving this to after sysTray.get. Pay close attention to how the menu and sub menu change
+        try {
+            UIManager.setLookAndFeel(new WindowsLookAndFeel());
+        } catch (Exception ignore) {}
+
         this.systemTray = SystemTray.get();
         if (systemTray == null) {
             throw new RuntimeException("Unable to load SystemTray!");
@@ -83,18 +92,12 @@ class TestTray {
 
         Menu mainMenu = systemTray.getMenu();
 
-        MenuItem greenEntry = new MenuItem("Green Mail", new ActionListener() {
+        MenuItem greenEntry = new MenuItem("CLICK ME", new ActionListener() {
             @Override
             public
             void actionPerformed(final ActionEvent e) {
-                final MenuItem entry = (MenuItem) e.getSource();
-                systemTray.setStatus("Some Mail!");
-                systemTray.setImage(GREEN_TRAIN);
-
-                entry.setCallback(callbackGray);
-                entry.setImage(BLACK_MAIL);
-                entry.setText("Delete Mail");
-//                systemTray.remove(menuEntry);
+                JOptionPane.showMessageDialog(null, "Do I look like Windows or Nimbus?\n" +
+                        "According to java I am " + UIManager.getLookAndFeel().toString());
             }
         });
         greenEntry.setImage(GREEN_MAIL);
